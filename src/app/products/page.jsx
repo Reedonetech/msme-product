@@ -5,6 +5,7 @@ import { useState, useMemo } from 'react';
 import { useProducts } from '../../../context/ProductContext';
 import { motion } from 'framer-motion';
 import Link from "next/link";
+import Footer from '../../app/component/footer';
 
 function SkeletonCard() {
   return (
@@ -23,6 +24,8 @@ function SkeletonCard() {
 export default function ProductsPage() {
   const { products, loading, error } = useProducts();
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
 
   const filteredProducts = useMemo(() => {
     if (!searchTerm.trim()) return products;
@@ -30,6 +33,13 @@ export default function ProductsPage() {
       product.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [products, searchTerm]);
+
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+
+  const paginatedProducts = useMemo(() => {
+    const start = (currentPage - 1) * itemsPerPage;
+    return filteredProducts.slice(start, start + itemsPerPage);
+  }, [filteredProducts, currentPage]);
 
   if (loading) {
     return (
@@ -55,22 +65,27 @@ export default function ProductsPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-12">
+    <div className="pt-8">
+      <div className='px-8'>
       <motion.h1
         initial={{ opacity: 0, y: -30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="text-4xl font-bold mb-10 text-center text-gray-800"
+        className="lg:text-4xl text-[25px] font-bold lg:mb-10 mb-5 text-center text-gray-800"
       >
-        Msme Product-Categories
+        Msme Product Categories
       </motion.h1>
 
+      {/* Search */}
       <div className="mb-10 flex justify-center">
         <input
           type="text"
           placeholder="Search products by title..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+            setCurrentPage(1); 
+          }}
           className="w-full max-w-md p-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
@@ -80,8 +95,8 @@ export default function ProductsPage() {
         layout
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
       >
-        {filteredProducts.map((product) => (
-         <Link href={`/products/${product.id}`} key={product.id}>
+        {paginatedProducts.map((product) => (
+          <Link href={`/products/${product.id}`} key={product.id}>
             <motion.div
               layout
               whileHover={{ scale: 1.03 }}
@@ -116,6 +131,7 @@ export default function ProductsPage() {
         ))}
       </motion.div>
 
+      
       {filteredProducts.length === 0 && searchTerm && (
         <motion.div
           initial={{ opacity: 0 }}
@@ -125,6 +141,41 @@ export default function ProductsPage() {
           No products found matching "{searchTerm}"
         </motion.div>
       )}
+
+      
+      {totalPages > 1 && (
+        <div className="flex justify-center mt-10 space-x-2">
+          <button
+            onClick={() => setCurrentPage(p => Math.max(p - 1, 1))}
+            disabled={currentPage === 1}
+            className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+          >
+            Prev
+          </button>
+          {Array.from({ length: totalPages }).map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setCurrentPage(i + 1)}
+              className={`px-4 py-2 rounded ${
+                currentPage === i + 1
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-gray-200 hover:bg-gray-300'
+              }`}
+            >
+              {i + 1}
+            </button>
+          ))}
+          <button
+            onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))}
+            disabled={currentPage === totalPages}
+            className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
+      )}
+      </div>
+      <Footer />
     </div>
   );
 }

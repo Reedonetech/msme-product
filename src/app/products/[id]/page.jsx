@@ -4,6 +4,7 @@ import { useParams } from 'next/navigation';
 import { useProducts } from '../../../../context/ProductContext';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import Footer from '../../component/footer';
 
 export default function ProductDetailPage() {
   const { id } = useParams();
@@ -36,7 +37,8 @@ export default function ProductDetailPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-12">
+    <div className="mt-8">
+      <div className='px-10'>
       <Link href="/products" className="text-blue-600 hover:underline mb-6 inline-block">
         ← Back to Products
       </Link>
@@ -51,11 +53,11 @@ export default function ProductDetailPage() {
           <img
             src={product.image}
             alt={product.title}
-            className="max-h-[400px] object-contain"
+            className="lg:max-h-[400px]  object-contain"
           />
         </div>
         <div>
-          <h1 className="text-3xl font-bold mb-4 text-gray-800">{product.title}</h1>
+          <h1 className="lg:text-3xl text-[22px] font-bold mb-4 text-gray-800">{product.title}</h1>
           <p className="text-xl text-blue-600 font-semibold mb-4">${product.price}</p>
           <p className="text-gray-600 mb-6">{product.description}</p>
 
@@ -73,6 +75,8 @@ export default function ProductDetailPage() {
           </button>
         </div>
       </motion.div>
+      </div>
+      <Footer />
     </div>
   );
 }
