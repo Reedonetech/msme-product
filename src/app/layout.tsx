@@ -6,7 +6,7 @@ import Providers from './providers';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
-  title: 'Product Catalog',
+  title: 'Msme Products',
   description: 'A simple product catalog built with Next.js',
 };
 

@@ -19,7 +19,7 @@ export default function Home() {
           transition={{ duration: 0.6 }}
           className="text-5xl font-extrabold text-gray-800 mb-6"
         >
-          Welcome to Reedone
+          Welcome to Msme Products
         </motion.h1>
         <p className="text-lg text-gray-600 mb-10">
           Explore a wide range of quality products at the best prices

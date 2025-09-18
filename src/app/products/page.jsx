@@ -62,7 +62,7 @@ export default function ProductsPage() {
         transition={{ duration: 0.6 }}
         className="text-4xl font-bold mb-10 text-center text-gray-800"
       >
-        Product Categories
+        Msme Product-Categories
       </motion.h1>
 
       <div className="mb-10 flex justify-center">
